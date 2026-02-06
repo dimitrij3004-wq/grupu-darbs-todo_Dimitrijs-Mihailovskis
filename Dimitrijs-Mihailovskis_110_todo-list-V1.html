@@ -61,10 +61,21 @@
         
         li.onclick = function(text){
         span.classList.toggle("text-decoration-line-through");
+        saveData();
         };
+        saveData();
     }
     
-    
+    function saveData(){
+        var list =[];
+        //for each cikls
+        localStorage.setItem("tasks", JSON.stringify(list));
+    }
+    // const tasks = JSON.parse(localStorage.getItem("tasks"));
+    //     console.log(savedUser.name); 
+    function loadData(){
+        
+    }
 </script>
 </body>
 </html>
