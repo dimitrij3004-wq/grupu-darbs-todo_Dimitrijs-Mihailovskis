@@ -57,25 +57,39 @@
         taskList.appendChild(li);
         input.value = "";
         
-        const text = document.createElement("text")
-        
-        li.onclick = function(text){
-        span.classList.toggle("text-decoration-line-through");
-        saveData();
+        li.onclick = function(){
+            span.classList.toggle("text-decoration-line-through");
+            saveData();
         };
         saveData();
     }
     
+    const taskListElement = document.getElementById("task-list");
+
     function saveData(){
-        var list =[];
-        //for each cikls
+        var list = [];
+        document.querySelectorAll("#task-list li").forEach(li => {
+            const text = li.querySelector("span").textContent;
+            const isCompleted = li.querySelector("span").classList.contains("text-decoration-line-through");
+            list.push({ text: text, completed: isCompleted });
+        });
         localStorage.setItem("tasks", JSON.stringify(list));
     }
     // const tasks = JSON.parse(localStorage.getItem("tasks"));
     //     console.log(savedUser.name); 
     function loadData(){
-        
+         const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.forEach(task => addTask(task.text, task.priority, task.done));
     }
+    button.onclick = function () {
+    const text = input.value.trim();
+    const priority = prioritySelect.value;
+    if (text === "") return;
+
+    addTask(text, priority);
+    input.value = "";
+};
+    loadData();
 </script>
 </body>
 </html>
