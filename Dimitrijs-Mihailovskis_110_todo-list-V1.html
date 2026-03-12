@@ -26,8 +26,18 @@
                     <input type="text" id="task-input" class="form-control" placeholder="Ieraksti darbu..." aria-label="Jauns darbs">
                     <button class="btn btn-primary" type="button" onclick="addTask(document.getElementById('task-input').value, document.getElementById('prioritySelect').value, false)">Pievienot</button>
                 </div>
+                <div class="container mt-4">
+    <div class="btn-group w-100" role="group" aria-label="Uzdevumu filtrs">
+        <button type="button" class="btn btn-outline-primary active">Visi</button>
+        <button type="button" class="btn btn-outline-primary">Aktīvie</button>
+        <button type="button" class="btn btn-outline-primary">Pabeigtie</button>
+    </div>
+</div>
+                
+               
                 <ul id="task-list" class="list-group">
                     </ul>
+                    
             </div>
         </div>
     </div>
@@ -123,14 +133,6 @@
          const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
         tasks.forEach(task => addTask(task.text, task.priority, task.completed));
     }
-    /*button.onclick = function () {
-        const text = input.value.trim();
-        const priority = prioritySelect.value;
-        if (text === "") return;
-
-        addTask(text, priority);
-        input.value = "";
-    };*/
     loadData();
 
     
