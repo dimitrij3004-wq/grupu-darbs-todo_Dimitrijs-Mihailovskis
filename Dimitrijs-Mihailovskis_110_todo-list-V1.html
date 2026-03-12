@@ -24,7 +24,7 @@
     <option value="high">Svarīgi</option>
 </select>
                     <input type="text" id="task-input" class="form-control" placeholder="Ieraksti darbu..." aria-label="Jauns darbs">
-                    <button class="btn btn-primary" type="button" onclick="addTask(document.getElementById('task-input').value, false)">Pievienot</button>
+                    <button class="btn btn-primary" type="button" onclick="addTask(document.getElementById('task-input').value, document.getElementById('prioritySelect').value, false)">Pievienot</button>
                 </div>
                 <ul id="task-list" class="list-group">
                     </ul>
@@ -45,10 +45,13 @@
         if (text.trim() === "") return;
         
         const li = document.createElement('li');
+        //li.dataset.priority = selectedPriority;
         
         li.className = "list-group-item d-flex justify-content-between align-items-center";
         
         span.textContent = text;
+        
+        span.classList.add("task-text");
         
         const deleteBtn = document.createElement('button');
         
@@ -59,6 +62,22 @@
         deleteBtn.onclick = function() {
             li.remove();
         };
+        
+        const badge = document.createElement("span");
+        
+        if (priority === "high") {
+            badge.textContent = "SVARĪGI";
+            badge.classList.add("bg-danger");
+        } else if (priority === "medium") {
+            badge.textContent = "Vidēja";
+            badge.classList.add("bg-warning");
+        } else {
+            badge.textContent = "Zema";
+            badge.classList.add("bg-secondary");
+        }
+        
+        li.appendChild(badge);
+        
         li.appendChild(span);
         li.appendChild(deleteBtn);
         taskList.appendChild(li);
@@ -72,6 +91,8 @@
             span.classList.toggle("text-decoration-line-through");
             saveData();
         };
+        
+        
         saveData();
     }
     
@@ -80,20 +101,27 @@
     function saveData(){
         var list = [];
         document.querySelectorAll("#task-list li").forEach(li => {
-            const text = li.querySelector("span").textContent;
+            var prioritate = "Zema";
+            const text = li.querySelector(".task-text").textContent;
             const isCompleted = li.querySelector("span").classList.contains("text-decoration-line-through");
-            const priority = li.dataset.priority;
-            list.push({ text: text, completed: isCompleted });
+            const priority = li.querySelector("span").textContent;
+            if (priority === "SVARĪGI") {
+                prioritate = "high";
+            } else if (priority === "Vidēja") {
+                prioritate = "medium";
+            } else {
+                prioritate = "low";
+            }
+            
+            list.push({ text: text, completed: isCompleted, priority: prioritate});
             
         });
         localStorage.setItem("tasks", JSON.stringify(list));
     }
-    // const tasks = JSON.parse(localStorage.getItem("tasks"));
-    //     console.log(savedUser.name); 
+    
     function loadData(){
          const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
         tasks.forEach(task => addTask(task.text, task.priority, task.completed));
-        //tasks.forEach(task => addTask(task.text, task.priority, task.done));
     }
     /*button.onclick = function () {
         const text = input.value.trim();
@@ -105,19 +133,11 @@
     };*/
     loadData();
 
-    const badge = document.createElement("span");
-    badge.classList.add("badge", "me-2");
+    
+    
+    const priority = document.getElementById("prioritySelect")
 
-    if (priority === "high") {
-        badge.textContent = "SVARĪGI";
-        badge.classList.add("bg-danger");
-    } else if (priority === "medium") {
-        badge.textContent = "Vidēja";
-        badge.classList.add("bg-warning");
-    } else {
-        badge.textContent = "Zema";
-        badge.classList.add("bg-secondary");
-    }
+    
 
 </script>
 </body>
