@@ -28,6 +28,7 @@
                 </div>
                 <div class="container mt-4">
     <div class="btn-group w-100" role="group" aria-label="Uzdevumu filtrs">
+        <input type="text" class ="form-control" oninput="meklesana()" id="meklet">
         <button type="button" class="btn btn-outline-primary active">Visi</button>
         <button type="button" class="btn btn-outline-primary">Aktīvie</button>
         <button type="button" class="btn btn-outline-primary">Pabeigtie</button>
@@ -42,6 +43,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     function addTask(text, priority, completed) {
@@ -74,6 +76,7 @@
         };
         
         const badge = document.createElement("span");
+        badge.classList.add("badge");
         
         if (priority === "high") {
             badge.textContent = "SVARĪGI";
@@ -108,26 +111,38 @@
     
     const taskListElement = document.getElementById("task-list");
 
-    function saveData(){
-        var list = [];
-        document.querySelectorAll("#task-list li").forEach(li => {
-            var prioritate = "Zema";
-            const text = li.querySelector(".task-text").textContent;
-            const isCompleted = li.querySelector("span").classList.contains("text-decoration-line-through");
-            const priority = li.querySelector("span").textContent;
-            if (priority === "SVARĪGI") {
-                prioritate = "high";
-            } else if (priority === "Vidēja") {
-                prioritate = "medium";
-            } else {
-                prioritate = "low";
-            }
-            
-            list.push({ text: text, completed: isCompleted, priority: prioritate});
-            
+function saveData() {
+    let list = [];
+
+    document.querySelectorAll("#task-list li").forEach(li => {
+        let prioritate = "low";
+
+        const textElement = li.querySelector(".task-text");
+        const badgeElement = li.querySelector(".badge");
+
+        const text = textElement.textContent;
+        const isCompleted = textElement.classList.contains("text-decoration-line-through");
+        const priority = badgeElement.textContent;
+
+        if (priority === "SVARĪGI") {
+            prioritate = "high";
+        } else if (priority === "Vidēja") {
+            prioritate = "medium";
+        } else {
+            prioritate = "low";
+        }
+
+        list.push({
+            text: text,
+            completed: isCompleted,
+            priority: prioritate
         });
-        localStorage.setItem("tasks", JSON.stringify(list));
-    }
+    });
+
+    localStorage.setItem("tasks", JSON.stringify(list));
+}
+
+
     
     function loadData(){
          const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
@@ -139,7 +154,30 @@
     
     const priority = document.getElementById("prioritySelect")
 
-    
+function meklesana() {
+    let meklet = document.getElementById("meklet").value.toUpperCase();
+    let li = document.querySelectorAll("#task-list li");
+
+    li.forEach(function(item) {
+        let textElement = item.querySelector(".task-text");
+        let txtValue = textElement.textContent || textElement.innerText;
+
+        if (txtValue.toUpperCase().indexOf(meklet) > -1) {
+            item.classList.remove("d-none");
+        } else {
+            item.classList.add("d-none");
+        }
+    });
+}
+    /*var filtretsuzd = "visi";
+    function meklesana(tips){
+        filtretsuzd = tips;
+        meklesana();
+    }
+    function mekleuzd(){
+        var mekle = document.getElementById("text").value;
+
+    }    */
 
 </script>
 </body>
